@@ -1,0 +1,90 @@
+{
+  "essayId": 1,
+  "essaySubmissionType": "manually",
+  "originalEssayWordCount":300,
+  "reWrittenEssayWordCount":300,
+  "originalEssay": "Corruption a major problem in Pakistan, deeply affecting all aspects of society. It hampers economic growth, increases unemployment, and leads to significant financial losses through tax evasion and shady business deal. This widespread corruption also causes inflation, weakens state institutions, and creates stark economic inequalities, with many lacking access to quality healthcare and education. Several factors contribute to corruption, including a lack of accountability, political instability, an overburdened judiciary, nepotism, and bureaucratic red tape. It's infuriating how the judicial system is crippled by a never-ending backlog of cases! and public institutions are often ineffective. To combat corruption, Pakistan needs to strengthen state institutions, promote transparency, and enforce accountability. Judicial reforms and public awareness campaigns are essential. The government should digitize systems, empower regulatory bodies, and simplify laws to make them more accessible. In conclusion, while corruption presents significant challenges, practical steps such as institutional reforms and civic education can help Pakistan move toward a more just and prosperous future.",
+  "reWrittenEssay": "Corruption is a major problem in Pakistan, deeply affecting all aspects of society. It hampers economic growth, increases unemployment, and leads to significant financial losses through tax evasion and shady business dealings. This widespread corruption also causes inflation, weakens state institutions, and creates stark economic inequalities, with many lacking access to quality healthcare and education. Several factors contribute to corruption, including a lack of accountability, political instability, an overburdened judiciary, nepotism, and bureaucratic red tape. The judicial system struggles with a backlog of cases, and public institutions are often ineffective. To combat corruption, Pakistan needs to strengthen state institutions, promote transparency, and enforce accountability. Judicial reforms and public awareness campaigns are essential. The government should digitize systems, empower regulatory bodies, and simplify laws to make them more accessible. In conclusion, while corruption presents significant challenges, practical steps such as institutional reforms and civic education can help Pakistan move toward a more just and prosperous future.",
+  "overallEssayEvaluationScore": 70,
+  "evaluationAndScoring": [
+    {
+      "label": "Grammar & Punctuation",
+      "score": 70,
+      "issuesCount": 2,
+      "issuesList": [
+        {
+          "before": "Corruption a major",
+          "after": "Corruption is a major"
+        },
+        {
+          "before": "Shady business deal",
+          "after": "Shady business dealings"
+        }
+      ]
+    },
+    {
+      "label": "Vocabulary Usage",
+      "score": 75,
+      "issuesCount": 1,
+      "issuesList": [
+        {
+          "before": "It's infuriating how",
+          "after": "The judicial system"
+        }
+      ]
+    },
+    {
+      "label": "Sentence Structure",
+      "score": 100,
+      "issuesCount": 0,
+      "issuesList": []
+    }
+  ],
+  "essayStructure": [
+    {
+      "label": "Structure & Word Count",
+      "features": [
+        {
+          "label": "Word Count",
+          "isCorrect": true
+        },
+        {
+          "label": "Thesis Statement",
+          "errorMessage": "Thesis should be clear and near the beginning of your essay.",
+          "isCorrect": false
+        }
+      ]
+    },
+    {
+      "label": "Paragraph Organization",
+      "features": [
+        {
+          "label": "Introduction",
+          "isCorrect": true
+        },
+        {
+          "label": "Body Paragraphs",
+          "isCorrect": true
+        },
+        {
+          "label": "Conclusion",
+          "isCorrect": true
+        }
+      ]
+    },
+    {
+      "label": "Coherence & Flow",
+      "features": [
+        {
+          "label": "Transition Words",
+          "isCorrect": true
+        },
+        {
+          "label": "Logical Flow",
+          "errorMessage": "Some paragraphs need better transitions.",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}
