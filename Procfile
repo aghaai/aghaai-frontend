@@ -1,1 +1,1 @@
-web: npm run build && npm run start
+web: npx dotenv -e .env.production -- next build && npm run start
