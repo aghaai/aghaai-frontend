@@ -16,7 +16,7 @@ const SideBar = ({ children }: { children: React.ReactNode }) => {
             <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
-              <SearchInput/>
+              {/* <SearchInput/> */}
             </div>
             <div className="px-4 flex items-center ">
               <NotificationDropdown />

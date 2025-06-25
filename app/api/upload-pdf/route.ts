@@ -1,18 +1,7 @@
 import { NextResponse } from "next/server";
-import path from "path";
-import { readFile } from "fs/promises";
-
-// Helper to simulate delay
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 export async function POST(request: Request) {
   try {
-    // Simulate processing delay (10 seconds)
-    await delay(10000);
-
-    // Parse the multipart form data (this will work if the file is sent with FormData)
     const formData = await request.formData();
     const pdfFile = formData.get("pdf");
 
@@ -23,18 +12,37 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log("Uploaded PDF file name:", pdfFile.name);
+    const uploadForm = new FormData();
+    uploadForm.append("file", pdfFile);
 
-    // Return dummy extracted essay data
-    const filePath = path.join(process.cwd(), "data", "extracted-data.json");
-    const fileContents = await readFile(filePath, "utf-8");
-    const dummyData = JSON.parse(fileContents);
+    const res = await fetch(
+      "https://ai-engineering-e5bd687053bb.herokuapp.com/api/upload",
+      {
+        method: "POST",
+        body: uploadForm,
+      }
+    );
 
-    return NextResponse.json(dummyData, { status: 200 });
+    if (!res.ok) {
+      const errorBody = await res.text();
+      return NextResponse.json(
+        { message: "Error from upload API", error: errorBody },
+        { status: res.status }
+      );
+    }
+
+    const data = await res.json();
+    return NextResponse.json(
+      {
+        extractedText: data.extracted_text,
+        wordCount: data.word_count,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Upload PDF Error:", error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: "Internal Server Error", error: error?.toString?.() || error },
       { status: 500 }
     );
   }

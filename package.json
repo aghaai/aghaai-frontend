@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "dotenv -e .env.development -- next dev",
-    "build": "dotenv -e .env.production -- next build",
-    "start": "dotenv -e .env.production -- next start",
-    "heroku-postbuild": "dotenv -e .env.production -- next build"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

@@ -39,7 +39,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
 // Maximum number of images
-const maxImagesQuantity = 15;
+const maxImagesQuantity = 10;
 
 const formSchema = z.object({
   images: z
@@ -98,7 +98,7 @@ const SortableImage = React.memo(function SortableImage({
       <div
         {...attributes}
         {...listeners}
-        className="absolute bottom-1 left-1 bg-white rounded-full p-1 shadow cursor-grab active:cursor-grabbing z-10"
+        className="absolute bottom-1 left-1 bg-white dark:bg-primary-foreground rounded-full p-1 shadow cursor-grab active:cursor-grabbing z-10"
       >
         <GripVertical className="w-4 h-4" />
       </div>
@@ -166,7 +166,7 @@ const UploadImages = () => {
 
     // Check if the total number of files is greater than maxImagesQuantity
     if (filtered.length + existing.length > maxImagesQuantity) {
-      toast.error("Cannot upload more than maxImagesQuantity images.");
+      toast.error(`Cannot upload more than ${maxImagesQuantity} images.`);
       return;
     }
 

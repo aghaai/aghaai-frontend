@@ -40,9 +40,7 @@ export function useAIEvaluation() {
       const formData = new FormData();
       formData.append("pdf", pdf);
 
-      const { data } = await axios.post("/api/upload-pdf", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const { data } = await axios.post("/api/upload-pdf", formData);
 
       return data;
     },

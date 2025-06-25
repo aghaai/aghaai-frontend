@@ -81,10 +81,10 @@ const ShowWrittenEssay = () => {
               <RotateCcw className="h-5 w-5 mr-1" />
               Reset
             </Button>
-            <Button variant="secondary">
+            {/* <Button variant="secondary">
               <ArrowDownToLine className="h-5 w-5 mr-1" />
               Download PDF
-            </Button>
+            </Button> */}
           </div>
         )}
       </div>

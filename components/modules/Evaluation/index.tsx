@@ -4,16 +4,16 @@ import SidePanel from "./side-panel";
 
 const EvaluationModule = () => {
   return (
-    <React.Fragment>
-      <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="col-span-2">
+    <div className="">
+      <div className="space-y-10 lg:space-y-0 lg:grid lg:grid-cols-3 gap-4 mb-4">
+        <div className="lg:col-span-2">
           <EssayInputSide />
         </div>
-        <div className="col-span-1">
+        <div className="w-full lg:col-span-1">
           <SidePanel />
         </div>
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 

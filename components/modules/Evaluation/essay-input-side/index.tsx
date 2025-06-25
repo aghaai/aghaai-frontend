@@ -55,10 +55,10 @@ const EssayInputSide = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <Camera className="mr-3 h-4 w-4" />
                 Open Camera
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuItem onClick={() => setMode("upload-images")}>
                 <Images className="mr-3 h-4 w-4" />
                 Upload Images
