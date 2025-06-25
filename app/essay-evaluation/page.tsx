@@ -1,4 +1,4 @@
-import EvaluationModule from "@/components/modules/Evaluation";
+import EvaluationModule from "../../components/modules/Evaluation";
 import React from "react";
 
 const EssayEvaluation = () => {

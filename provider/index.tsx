@@ -1,9 +1,9 @@
 "use client";
-import SideBar from "@/components/SideBar";
+import SideBar from "../components/SideBar";
 import { ThemeProvider } from "next-themes";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { persistor, store } from "@/store";
+import { persistor, store } from "../store";
 import { PersistGate } from "redux-persist/integration/react";
 import { Toaster } from "sonner";
 import { Provider as ReduxProvider } from "react-redux";
