@@ -1,43 +1,69 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
-import { IncomingForm } from "formidable";
-import fs from "fs";
-import path from "path";
-
-// Disable bodyParser so we can handle multipart ourselves
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-function parseForm(req: Request): Promise<{ files: any }> {
-  return new Promise((resolve, reject) => {
-    const form = new IncomingForm({ multiples: true });
-
-    form.parse(req as any, (err, fields, files) => {
-      if (err) reject(err);
-      else resolve({ files });
-    });
-  });
-}
 
 export async function POST(req: Request) {
   try {
-    console.log(req)
-    // const { files } = await parseForm(req);
-    // console.log("Received files:", files);
+    console.log("Upload Images API called");
+    const formData = await req.formData();
 
-    // Simulate delay
-    await new Promise((res) => setTimeout(res, 5000));
+    console.log(formData);
 
-    const filePath = path.join(process.cwd(), "data", "extracted-data.json");
-    const fileContents = await fs.promises.readFile(filePath, "utf-8");
-    const dummyData = JSON.parse(fileContents);
+    const images = formData.getAll("images");
 
-    return NextResponse.json(dummyData, { status: 200 });
+    console.log("Images:", images);
+
+    if (!images.length) {
+      return NextResponse.json(
+        { message: "No images uploaded" },
+        { status: 400 }
+      );
+    }
+
+    const uploadForm = new FormData();
+    images.forEach((file: FormDataEntryValue) => {
+      if (file instanceof File) {
+        uploadForm.append("files", file);
+      }
+    });
+
+    const res = await fetch(
+      "https://danishjameel003-dockerhuggingface.hf.space/api/upload/bulk",
+      {
+        method: "POST",
+        body: uploadForm,
+      }
+    );
+
+    if (!res.ok) {
+      const errorBody = await res.text();
+      return NextResponse.json(
+        { message: "Error from images API", error: errorBody },
+        { status: res.status }
+      );
+    }
+
+    const data = await res.json();
+    console.log(data);
+
+    let combined_word_count = 0;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    data.results.forEach((result: any) => {
+      combined_word_count += result.word_count;
+    });
+
+    return NextResponse.json(
+      {
+        extractedText: data.combined_text,
+        wordCount: combined_word_count,
+      },
+      { status: 200 }
+    );
+    // return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error("Upload failed:", error);
-    return NextResponse.json({ message: "Upload failed." }, { status: 500 });
+    console.error("Upload Images Error:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error", error: error?.toString?.() || error },
+      { status: 500 }
+    );
   }
 }

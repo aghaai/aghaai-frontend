@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,24 +10,35 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2 } from "lucide-react";
 
+// Helper for word count
+const countWords = (text: string) =>
+  text.trim() ? text.trim().split(/\s+/).length : 0;
+
 const EditUploadedEssayText = ({
   extractedText,
-  wordCount,
+  wordCount: initialWordCount,
   uploadType,
 }: {
   extractedText: string;
   wordCount: number;
   uploadType: "upload-images" | "upload-pdf";
 }) => {
+  const [text, setText] = useState(extractedText);
+  const [wordCount, setWordCount] = useState(() => countWords(extractedText));
   const essayRef = useRef<HTMLTextAreaElement>(null);
   const { submitEssay } = useAIEvaluation();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isLoading } = useAppSelector((state) => state.aiEvaluation);
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value);
+    setWordCount(countWords(e.target.value));
+  };
+
   const handleSubmit = () => {
     const finalText = essayRef.current?.value;
-
     if (finalText) {
       submitEssay.mutateAsync(
         {
@@ -36,14 +47,15 @@ const EditUploadedEssayText = ({
         },
         {
           onSuccess: (data) => {
-            // Reset the essay and word count
+            // Reset essay and word count
+            setText("");
+            setWordCount(0);
             if (essayRef.current) essayRef.current.value = "";
             // Set the evaluation result
             dispatch(aiEvaluationActions.setEvaluationResult({ ...data }));
 
             const params = new URLSearchParams(searchParams.toString());
             params.set("tab", "insights");
-
             router.replace(`?${params.toString()}`, { scroll: false });
           },
         }
@@ -69,8 +81,9 @@ const EditUploadedEssayText = ({
             </div>
             <Textarea
               ref={essayRef}
-              defaultValue={extractedText}
-              className=" flex-1 min-h-[60vh] resize max-h-[60vh] p-4 overflow-hidden "
+              value={text}
+              onChange={handleTextChange}
+              className=" flex-1 min-h-[60vh] resize max-h-[60vh] p-4 "
             />
           </div>
         </>
@@ -78,7 +91,7 @@ const EditUploadedEssayText = ({
 
       <div className="flex justify-between items-start ">
         <Label className="">
-          <span className="text-muted-foreground">Word Count</span>
+          <span className="text-muted-foreground">Word Count </span>
           <span className="text-muted-foreground">{wordCount}</span>
         </Label>
 
@@ -88,8 +101,9 @@ const EditUploadedEssayText = ({
           onClick={handleSubmit}
           type="submit"
         >
-          {submitEssay.isPending ||
-            (isLoading && <Loader2 className="animate-spin mr-2" />)}
+          {(submitEssay.isPending || isLoading) && (
+            <Loader2 className="animate-spin mr-2" />
+          )}
           Submit For Review
         </Button>
       </div>

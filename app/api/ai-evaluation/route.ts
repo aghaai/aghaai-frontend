@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { essaySubmissionTypeT } from "@/types/ai-evaluation";
 
 const EssayEvaluation_API =
-  "https://ai-engineering-e5bd687053bb.herokuapp.com/api/essay-analysis";
+  "https://danishjameel003-dockerhuggingface.hf.space/api/essay-analysis";
 
 export async function POST(request: Request) {
   try {
@@ -11,16 +11,15 @@ export async function POST(request: Request) {
       essaySubmissionType: essaySubmissionTypeT;
     };
 
-    // Build form data
-    const formData = new URLSearchParams();
+    const formData = new FormData();
     formData.append("essay_text", data.essayText);
 
     const xyzRes = await fetch(EssayEvaluation_API, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData.toString(),
+      // headers: {
+      //   "Content-Type": "application/x-www-form-urlencoded",
+      // },
+      body: formData,
     });
 
     if (!xyzRes.ok) {

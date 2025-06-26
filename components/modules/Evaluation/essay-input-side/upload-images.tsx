@@ -39,7 +39,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
 // Maximum number of images
-const maxImagesQuantity = 10;
+const maxImagesQuantity = 5;
 
 const formSchema = z.object({
   images: z

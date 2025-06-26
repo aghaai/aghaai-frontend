@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     uploadForm.append("file", pdfFile);
 
     const res = await fetch(
-      "https://ai-engineering-e5bd687053bb.herokuapp.com/api/upload",
+      "https://danishjameel003-dockerhuggingface.hf.space/api/upload",
       {
         method: "POST",
         body: uploadForm,
