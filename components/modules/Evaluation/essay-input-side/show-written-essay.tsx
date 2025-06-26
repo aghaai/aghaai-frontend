@@ -55,7 +55,7 @@ const ShowWrittenEssay = () => {
         ShowMode === "original"
           ? `<mark class="bg-red-200 rounded px-1 py-1">$1</mark>`
           : // : `<mark class="bg-green-200 rounded px-1 py-1">$1</mark>`
-            `<span class="">$1</span>`
+            `$1`
       );
     });
 
