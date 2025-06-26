@@ -20,24 +20,30 @@ const ManuallyWrite = () => {
   const { evaluationResult, isLoading } = useAppSelector(
     (state) => state.aiEvaluation
   );
-  console.log(evaluationResult);
   const essayRef = React.useRef<HTMLTextAreaElement | null>(null);
   const [wordCount, setWordCount] = React.useState(0);
+  const [textValue, setTextValue] = React.useState("");
 
-  const minimumWordCount = 0;
+  const minimumWordCount = 100;
+  const maximumWordCount = 1000;
 
-  // Calculate word count
-  const handleWordCountChange = () => {
-    if (!essayRef.current) return;
-    const text = essayRef.current.value;
+  // Calculate word count on input
+  const handleWordCountChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
     const count = text.trim().split(/\s+/).filter(Boolean).length;
     setWordCount(count);
+
+    // Option 1: Prevent typing after maximum
+    if (count <= maximumWordCount) {
+      setTextValue(text);
+    } else {
+      // Optionally show a toast
+      toast.warning(`Maximum allowed words is ${maximumWordCount}.`);
+    }
   };
 
   // Handle essay submission
   const handleSubmitEssay = async () => {
-    if (!essayRef.current) return;
-    // Check if essay is at least minimumWordCount words
     const text = essayRef.current?.value || "";
     const count = text.trim().split(/\s+/).filter(Boolean).length;
 
@@ -45,26 +51,25 @@ const ManuallyWrite = () => {
       toast.error(`Essay must be at least ${minimumWordCount} words long`);
       return;
     }
-    // Check if essay is already submitted
+    if (count > maximumWordCount) {
+      toast.error(`Essay must not exceed ${maximumWordCount} words`);
+      return;
+    }
     if (submitEssay.isPending) return;
 
-    // Start the Evaluation process in the store this will start the loading spinner
     dispatch(aiEvaluationActions.startEvaluation());
 
-    // submit the essay to the server
     await submitEssay.mutateAsync(
       { essaySubmissionType: "manually", essayText: text },
       {
         onSuccess: (data) => {
-          // Reset the essay and word count
           if (essayRef.current) essayRef.current.value = "";
           setWordCount(0);
-          // Set the evaluation result
+          setTextValue("");
           dispatch(aiEvaluationActions.setEvaluationResult({ ...data }));
 
           const params = new URLSearchParams(searchParams.toString());
           params.set("tab", "insights");
-
           router.replace(`?${params.toString()}`, { scroll: false });
         },
       }
@@ -78,8 +83,9 @@ const ManuallyWrite = () => {
       ) : (
         <Textarea
           inputMode="text"
-          placeholder={`Write your essay here, make sure it is at least ${minimumWordCount} words long.`}
+          placeholder={`Write your essay here, between ${minimumWordCount} and ${maximumWordCount} words.`}
           onChange={handleWordCountChange}
+          value={textValue}
           ref={essayRef}
           className=" flex-1 min-h-[70vh] max-h-[70vh] p-4  overflow-hidden"
         />
@@ -87,8 +93,21 @@ const ManuallyWrite = () => {
 
       <div className="flex justify-between items-start ">
         <Label className="">
-          <span className="text-muted-foreground">Word Count</span>
-          <span className="text-muted-foreground">{wordCount}</span>
+          <span className="text-muted-foreground">Word Count </span>
+          <span
+            className={`text-muted-foreground ${
+              wordCount > maximumWordCount
+                ? "text-red-500 font-bold"
+                : wordCount < minimumWordCount
+                ? ""
+                : ""
+            }`}
+          >
+            {wordCount}
+          </span>
+          <span className="ml-2 text-xs text-muted-foreground">
+            (min: {minimumWordCount}, max: {maximumWordCount})
+          </span>
         </Label>
 
         <Button
@@ -97,8 +116,9 @@ const ManuallyWrite = () => {
           onClick={handleSubmitEssay}
           type="submit"
         >
-          {submitEssay.isPending ||
-            (isLoading && <Loader2 className="animate-spin mr-2" />)}
+          {(submitEssay.isPending || isLoading) && (
+            <Loader2 className="animate-spin mr-2" />
+          )}
           Submit For Review
         </Button>
       </div>

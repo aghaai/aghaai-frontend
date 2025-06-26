@@ -34,12 +34,14 @@ import { toast } from "sonner";
 import { useAIEvaluation } from "@/hooks/use-ai-evaluation";
 import EditUploadedEssayText from "./edit-uploaded-essay-text";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import imageCompression from "browser-image-compression";
 // Accepted image types
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
 // Maximum number of images
-const maxImagesQuantity = 5;
+const maxImagesQuantity = 3;
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_TOTAL_SIZE = 3.9 * 1024 * 1024; // under 4MB for Vercel
 
 const formSchema = z.object({
   images: z
@@ -143,34 +145,53 @@ const UploadImages = () => {
   };
 
   // Handle image upload
-  const onDrop = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = Array.from(e.target.files || []);
     const existing = watch("images");
+    // eslint-disable-next-line prefer-const
+    let compressedFiles: File[] = [];
 
-    // Filter out duplicate files
-    const filtered = newFiles.filter((file) => {
+    console.log("Compression started");
+    // Compress each image (can be async/await for each)
+    for (const file of newFiles) {
+      try {
+        const compressed = await imageCompression(file, {
+          maxSizeMB: 1.1, // You can tweak: 1.1 MB x 3 = ~3.3MB
+          maxWidthOrHeight: 1200, // Reasonable resolution
+          useWebWorker: true,
+        });
+        compressedFiles.push(compressed);
+      } catch {
+        toast.error(`Failed to compress image ${file.name}`);
+      }
+    }
+    console.log("Compression completed");
+    // Filter out duplicates (by name+size)
+    const filtered = compressedFiles.filter((file) => {
       const isAllowedType = ACCEPTED_IMAGE_TYPES.includes(file.type);
       const isDuplicate = existing.some(
         (f) => f.name === file.name && f.size === file.size
       );
-
-      if (!isAllowedType) {
-        toast.error("Invalid file type");
-      }
-      if (isDuplicate) {
-        toast.error("Same File already added");
-      }
-
+      if (!isAllowedType) toast.error("Invalid file type");
+      if (isDuplicate) toast.error("Same File already added");
       return isAllowedType && !isDuplicate;
     });
 
-    // Check if the total number of files is greater than maxImagesQuantity
+    // Limit to 3 images max
     if (filtered.length + existing.length > maxImagesQuantity) {
       toast.error(`Cannot upload more than ${maxImagesQuantity} images.`);
       return;
     }
 
-    setValue("images", [...existing, ...filtered]);
+    // Ensure total size is < 4MB
+    const allImages = [...existing, ...filtered];
+    const totalSize = allImages.reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > MAX_TOTAL_SIZE) {
+      toast.error("Total upload must be less than 4MB. Try smaller images.");
+      return;
+    }
+
+    setValue("images", allImages);
     e.target.value = "";
   };
 
@@ -256,7 +277,8 @@ const UploadImages = () => {
           <Button
             variant="outline"
             type="submit"
-            onClick={handleSubmit(onSubmit)}
+            // onClick={handleSubmit(onSubmit)}
+            onClick={() => uploadImages.mutate(images)}
             disabled={images.length === 0}
           >
             Submit For Review

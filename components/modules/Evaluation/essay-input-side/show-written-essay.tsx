@@ -11,14 +11,14 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 const ShowWrittenEssay = () => {
   const { evaluationResult } = useAppSelector((state) => state.aiEvaluation);
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
-
+  const router = useRouter();
   const [ShowMode, setShowMode] = React.useState<"original" | "aiWritten">(
     "original"
   );
@@ -63,7 +63,24 @@ const ShowWrittenEssay = () => {
   };
 
   const handleReset = () => {
+    // Clear Redux state
     dispatch(aiEvaluationActions.clearEvaluationResult());
+
+    // Build new search params
+    const params = new URLSearchParams(searchParams.toString());
+
+    // If 'tab' is insights, set to history
+    if (params.get("tab") === "insights") {
+      params.set("tab", "history");
+    }
+
+    // Remove highlight key if present
+    if (params.has("highlight")) {
+      params.delete("highlight");
+    }
+
+    // Push new URL without full reload, preserve scroll
+    router.replace(`?${params.toString()}`, { scroll: false });
   };
 
   return (

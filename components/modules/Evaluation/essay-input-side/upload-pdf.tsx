@@ -14,6 +14,7 @@ import EditUploadedEssayText from "./edit-uploaded-essay-text";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const ACCEPTED_PDF_TYPE = ["application/pdf"];
+const MAX_PDF_SIZE = 3.9 * 1024 * 1024; // ~4MB
 
 const formSchema = z.object({
   pdf: z
@@ -52,6 +53,23 @@ const UploadPdf = () => {
       toast.error("Only PDF files are allowed");
       return;
     }
+
+    if (!newFile) return;
+    if (!ACCEPTED_PDF_TYPE.includes(newFile.type)) {
+      toast.error("Only PDF files are allowed");
+      return;
+    }
+
+    if (newFile.size > MAX_PDF_SIZE) {
+      toast.error(
+        "PDF is too large for online processing (max 4MB for demo). " +
+          "Please use a free PDF compressor"
+      );
+      return;
+    }
+
+    setValue("pdf", [newFile]);
+    e.target.value = "";
 
     setValue("pdf", [newFile]);
     e.target.value = "";
@@ -92,7 +110,7 @@ const UploadPdf = () => {
       >
         <Label className="text-lg font-semibold">Upload PDF</Label>
         <p className="text-sm text-muted-foreground -mt-2">
-          Only one PDF file allowed.
+          Only one PDF file allowed. Maximum file size: 4MB
         </p>
 
         <Controller
@@ -133,9 +151,7 @@ const UploadPdf = () => {
           )}
         />
         {errors.pdf && (
-          <p className="text-sm text-red-500 mt-2">
-            {errors.pdf.message}
-          </p>
+          <p className="text-sm text-red-500 mt-2">{errors.pdf.message}</p>
         )}
       </form>
       <div className="flex justify-end">
