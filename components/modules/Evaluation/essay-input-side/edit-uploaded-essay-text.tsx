@@ -31,7 +31,7 @@ const EditUploadedEssayText = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isLoading } = useAppSelector((state) => state.aiEvaluation);
-
+  const essayTopic = searchParams.get("essayTopic");
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
     setWordCount(countWords(e.target.value));
@@ -44,6 +44,7 @@ const EditUploadedEssayText = ({
         {
           essaySubmissionType: uploadType,
           essayText: finalText,
+          topic:essayTopic || "",
         },
         {
           onSuccess: (data) => {

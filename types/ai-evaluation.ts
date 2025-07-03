@@ -2,6 +2,7 @@ export type essaySubmissionTypeT = "manually" | "upload-images" | "upload-pdf";
 export type submitEssayResponseT = {
   essayId: string;
   essaySubmissionType: essaySubmissionTypeT;
+  topic: string;
   originalEssayWordCount: number;
   reWrittenEssayWordCount: number;
   originalEssay: string;

@@ -16,7 +16,7 @@ const ManuallyWrite = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const essayTopic = searchParams.get("essayTopic");
   const { evaluationResult, isLoading } = useAppSelector(
     (state) => state.aiEvaluation
   );
@@ -60,7 +60,11 @@ const ManuallyWrite = () => {
     dispatch(aiEvaluationActions.startEvaluation());
 
     await submitEssay.mutateAsync(
-      { essaySubmissionType: "manually", essayText: text },
+      {
+        essaySubmissionType: "manually",
+        essayText: text,
+        topic: essayTopic || "",
+      },
       {
         onSuccess: (data) => {
           if (essayRef.current) essayRef.current.value = "";

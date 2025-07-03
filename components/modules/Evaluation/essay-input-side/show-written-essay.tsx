@@ -23,6 +23,8 @@ const ShowWrittenEssay = () => {
     "original"
   );
 
+  console.log("evaluationResult", evaluationResult);
+
   const highlightSection = searchParams.get("highlight");
 
   if (!evaluationResult) return null;
@@ -84,9 +86,13 @@ const ShowWrittenEssay = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
+      <Label className="text-xl font-semibold">Topic</Label>
+      <Label className="text-lg font-semibold text-muted-foreground">
+        {evaluationResult.topic}
+      </Label>
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-5">
         <Label className="flex items-center gap-2 text-lg font-semibold">
           <BookOpen className="h-5 w-5" />
           {ShowMode === "original" ? "Original Essay" : "AI Re-Written Essay"}

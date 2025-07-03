@@ -70,7 +70,7 @@ const EssayEvaluation = () => {
     <TabsContent value="insights" className="p-3">
       {currentInsight === "overview" && (
         <>
-          <Label className="text-muted-foreground">
+          {/* <Label className="text-muted-foreground">
             Over all Essay Evaluation
           </Label>
           <div className="mt-6 flex justify-center items-center">
@@ -79,8 +79,8 @@ const EssayEvaluation = () => {
               isScoreShow
               scoreLabelClassName="text-muted-foreground"
             />
-          </div>
-          <Separator className="my-4" />
+          </div> */}
+          {/* <Separator className="my-4" /> */}
           <Button
             className="w-full justify-start mb-3 py-5"
             variant="secondary"
@@ -142,11 +142,11 @@ const EssayEvaluation = () => {
                     <div className="border p-3 rounded-md bg-card">
                       <div className="flex justify-between">
                         <Label>{item.label}</Label>
-                        <PercentageChart
+                        {/* <PercentageChart
                           score={item.score}
                           radius={14}
                           stroke={3}
-                        />
+                        /> */}
                       </div>
                       <AccordionTrigger className="hover:decoration-card pb-0 items-center">
                         <div

@@ -9,11 +9,12 @@ export async function POST(request: Request) {
     const data = (await request.json()) as {
       essayText: string;
       essaySubmissionType: essaySubmissionTypeT;
+      topic: string;
     };
 
     const formData = new FormData();
     formData.append("essay_text", data.essayText);
-
+    formData.append("topic", data.topic);
     const xyzRes = await fetch(EssayEvaluation_API, {
       method: "POST",
       // headers: {
@@ -31,7 +32,11 @@ export async function POST(request: Request) {
     }
 
     const xyzData = await xyzRes.json();
-    return NextResponse.json(xyzData, { status: 200 });
+    console.log(xyzData);
+    return NextResponse.json(
+      { ...xyzData, topic: data.topic },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json(

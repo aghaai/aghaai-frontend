@@ -8,13 +8,16 @@ export function useAIEvaluation() {
     mutationFn: async ({
       essaySubmissionType,
       essayText,
+      topic
     }: {
       essayText: string;
       essaySubmissionType: essaySubmissionTypeT;
+      topic: string
     }) => {
       const { data } = await axios.post("/api/ai-evaluation", {
         essayText,
         essaySubmissionType,
+        topic
       });
       return data;
     },
